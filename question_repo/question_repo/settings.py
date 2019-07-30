@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'mb19kw+p41w@1+gzv%$l*-nf(-gilb*&pac(3ym$py6q0r(w99'
+SECRET_KEY = '*wj&ha7x5*s)^a*8)k$9c@vf1063re+ayukx9e#ip2!kr&_cje'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -58,7 +58,8 @@ ROOT_URLCONF = 'question_repo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # 配置html文件查找路径（整个项目共用一套html，所以直接放在项目根目录）
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,7 +122,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+# 静态文件的查找路径
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(os.path.join(BASE_DIR, "static"))
+]
 
 # 配置日志
 LOG_ROOT = os.path.join(BASE_DIR, 'logs')
@@ -142,7 +147,6 @@ LOGGING = {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
             'include_html': True,
-            'encoding':'utf-8',
             },
         'default': {
             'level':'DEBUG',
@@ -151,43 +155,21 @@ LOGGING = {
             'maxBytes': 1024*1024*5,       # 文件大小
             'backupCount': 5,              # 备份份数
             'formatter':'standard',        # 使用哪种formatters日志格式
+            'encoding':'utf-8',
         },
-        'error': {
-            'level':'ERROR',
-            'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(LOG_ROOT, 'error.log'),
-            'maxBytes':1024*1024*5,
-            'backupCount': 5,
-            'formatter':'standard',
-            },
         'console':{
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'standard'
         },
-        'request_handler': {
-            'level':'DEBUG',
-            'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(LOG_ROOT, 'script.log'),
-            'maxBytes': 1024*1024*5,
-            'backupCount': 5,
-            'formatter':'standard',
-            },
-        'scprits_handler': {
-            'level':'DEBUG',
-            'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(LOG_ROOT, 'script.log'),
-            'maxBytes': 1024*1024*5,
-            'backupCount': 5,
-            'formatter':'standard',
-            },
-        'accounts_handler': {
+        'account_handler': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(LOG_ROOT, 'accounts.log'),
+            'filename': os.path.join(LOG_ROOT, 'account.log'),
             'maxBytes': 1024 * 1024 * 5,
             'backupCount': 5,
             'formatter': 'standard',
+            'encoding':'utf-8',
         },
         'apis_handler': {
             'level': 'DEBUG',
@@ -196,6 +178,7 @@ LOGGING = {
             'maxBytes': 1024 * 1024 * 5,
             'backupCount': 5,
             'formatter': 'standard',
+            'encoding':'utf-8',
         },
         'repo_handler': {
             'level': 'DEBUG',
@@ -204,6 +187,7 @@ LOGGING = {
             'maxBytes': 1024 * 1024 * 5,
             'backupCount': 5,
             'formatter': 'standard',
+            'encoding':'utf-8',
         }
     },
     'loggers': {
@@ -212,8 +196,8 @@ LOGGING = {
         #     'level': 'DEBUG',
         #     'propagate': False
         # },
-        'accounts':{
-            'handlers': ['accounts_handler', 'console'],
+        'account':{
+            'handlers': ['account_handler', 'console'],
             'level': 'DEBUG',
             'propagate': False
         },
@@ -229,3 +213,5 @@ LOGGING = {
         },
     }
 }
+
+
