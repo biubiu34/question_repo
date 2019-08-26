@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.usercenter',
     'apps.apis',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -222,3 +224,26 @@ CACHES = {
 }
 
 AUTH_USER_MODEL = 'accounts.User'
+
+#fontpath
+FontPath = os.path.join(BASE_DIR, 'static/fonts/')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+if not os.path.exists(MEDIA_ROOT):
+    os.mkdir(MEDIA_ROOT)
+MEDIA_URL = '/media/'
+# CKEditor配置
+# 真实路径为：MEDIA_URL+CKEDITOR_UPLOAD_PATH(MEDIA_ROOT/CKEDITOR_UPLOAD_PATH)
+CKEDITOR_UPLOAD_PATH = "ckeditor_upload"
+
+CKEDITOR_CONFIGS = {
+    'awesome_ckeditor': {
+        'toolbar': 'Basic',
+    },
+    'default_ckeditor':{
+        'toolbar': 'Full',
+    },
+    'default': {
+        'toolbar': 'Full',
+    },
+}

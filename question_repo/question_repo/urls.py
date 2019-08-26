@@ -16,6 +16,9 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from . import views
+from django.views.static import serve
+from . import settings
+import re
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -23,5 +26,10 @@ urlpatterns = [
     url(r'^accounts/', include('apps.accounts.urls', namespace="accounts")),
     url(r'^apis/', include('apps.apis.urls', namespace="apis")),
     url(r'^uc/', include('apps.usercenter.urls', namespace="uc")),
-    url(r'^', include('apps.repo.urls', namespace="repo")),
+    # url(r'^', include('apps.repo.urls', namespace="repo")),
+    url(r'^%s(?P<path>.*)$' % re.escape(settings.MEDIA_URL.lstrip('/')), serve,
+        {"document_root": settings.MEDIA_ROOT}),
+    # ckeditor
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    url(r'^', include('apps.repo.urls', namespace='repo')),
 ]

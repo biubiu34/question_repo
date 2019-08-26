@@ -40,7 +40,7 @@
               <a href="#" class="logo">三创<span>题库</span></a>
               <!--logo end-->
               <div class="top-nav">
-                  <!-- Collect the nav links, forms, and other content for toggling -->
+
                   <ul class="nav navbar-nav">
                     <li class="active">
                       <a class="" href="http://127.0.0.1:8000/">
@@ -55,8 +55,8 @@
                   </ul>
                   <ul class="nav pull-right top-menu">
                       <li>
-                          <form action="/question/">
-                             <input type="text" class="form-control search" placeholder="Search" name="search" id="search">
+                          <form action="{% url 'repo:questions' %}">
+                             <input type="text" class="form-control search" placeholder="Search" name="search" id="search" value="{{ search_key }}">
                           </form>
                       </li>
                       <!-- user login dropdown start-->

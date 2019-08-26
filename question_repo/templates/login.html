@@ -22,7 +22,8 @@
 </head>
     <body class="login-body">
         <div class="container">
-          <form class="form-signin">
+          <form class="form-signin" method="post">
+          {% csrf_token %}
             <h2 class="form-signin-heading">登录</h2>
             <div class="login-wrap">
                 {{ form.username}}
@@ -58,5 +59,45 @@
             </div>
           </form>
         </div>
+    <script>
+    get_captcha_img();
+    $("#captcha_img").click(get_captcha_img);
+
+    function get_captcha_img() {
+        $.ajax({
+            url: '{% url 'apis:get_captcha' %}',
+            type: 'GET',
+            dataType: 'text',
+            success: function (data) {
+                $('#captcha_img').attr('src', data);
+            }
+        });
+    }
+
+    // 这里在form中定义了，如果没定义可以用jquery添加事件
+    // $("#id_captcha").blur(check_captcha);
+
+    // 当失去焦点时检查验证码
+    function check_captcha() {
+        var captcha_code = $('#id_captcha').val();
+        if (captcha_code.length == 0){
+            return false
+        }
+        $.ajax({
+            url: '{% url 'apis:check_captcha' %}',
+            type: 'GET',
+            dataType: 'json',
+            data: {"captcha_code": captcha_code},
+            success: function (data) {
+                if(data.code == 400){
+                     $('.msg').html("验证码错误");
+                }else{
+                    $('.msg').html("");
+                }
+            }
+        });
+    };
+</script>
+
     </body>
 </html>

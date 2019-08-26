@@ -54,6 +54,12 @@ class Register(View):
                 ret['msg'] = form.errors
         logger.debug(f"用户注册结果：{ret}")
         return JsonResponse(ret)
+"""
+HttpResponse
+JsonResponse
+Render  ==>执行
+    ==>实现csrf_token一定要使用render
+"""
 
 
 class Login(View):
@@ -66,5 +72,43 @@ class Login(View):
         if request.user.is_authenticated:
             return redirect(request.session["next"])
         form = LoginForm()
-
         return render(request, "login.html", {"form":form})
+
+        # Form表单直接提交
+
+        # Form表单直接提交
+
+    def post(self, request):
+        # 表单数据绑定
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+            captcha = form.cleaned_data["captcha"]
+            session_captcha_code = request.session.get("captcha_code", "")
+            logger.debug(f"登录提交验证码:{captcha}-{session_captcha_code}")
+            # 验证码一致
+            if captcha.lower() == session_captcha_code.lower():
+                user, flag = form.check_password()
+                # user = auth.authenticate(username=username, password=password)
+                if user is not None and user.is_active and flag:
+                    auth.login(request, user)
+                    logger.info(f"{user.username}登录成功")
+                    # 跳转到next
+                    return redirect(request.session.get("next", '/'))
+                msg = "用户名或密码错误"
+                logger.error(f"{username}登录失败, 用户名或密码错误")
+            else:
+                msg = "验证码错误"
+                logger.error(f"{username}登录失败, 验证码错误")
+        else:
+            msg = "表单数据不完整"
+            logger.error(msg)
+        return render(request, "login.html", {"form": form, "msg": msg})
+
+
+def logout(request):
+    auth.logout(request)
+    return redirect(reverse("repo:index"))
+
+
+

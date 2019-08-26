@@ -66,6 +66,7 @@ class LoginForm(forms.Form):
         try:
             user = User.objects.get(username=username)
             return user, auth_check_password(password, user.password)
+
         except:
             return None, False
 
